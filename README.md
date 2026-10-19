@@ -8,6 +8,7 @@
 
 **适配赛事**：麦当劳程序员创意开发大赛
 **开发载体**：WorkBuddy + 麦当劳 MCP 官方接口
+**项目仓库**：https://github.com/MX168/maifan-dazi
 **双硬性承诺**：
 1. **最终方案实付金额永远 ≤ 用户预算**。宁可少点，不可超支。
 2. **各人分账金额之和永远精确等于实付金额**。不多收一分，也不少收一分。
@@ -647,9 +648,11 @@ def checksum(prefix: str) -> str:
   ```text
   【参赛申请】
   项目名称：麦饭搭子 · 趣味智能拼单助手
-  项目地址：{项目 GitHub 仓库地址}
-  项目简介：{项目简介}
+  项目地址：https://github.com/MX168/maifan-dazi
+  项目简介：……
   ```
+
+  完整简介文案见 [SUBMISSION_ISSUE.md](./SUBMISSION_ISSUE.md)，已控制在 1000 字内、不含图片，可直接复制。
 
 - **仓库必须 Public**，否则无法通过报名审核
 

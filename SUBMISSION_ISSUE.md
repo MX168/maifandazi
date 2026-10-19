@@ -3,13 +3,13 @@
 > 依据官方规则：报名需在 https://github.com/M-China/mcd-developer-innovation-challenge
 > 按模板发布 Issue，正文**不超过 1000 字、不含图片**。
 > 复制下方两条分隔线之间的内容（从「【参赛申请】」起，到结尾说明止），
-> 把 `{项目 GitHub 仓库地址}` 换成你的仓库地址即可。
+> 仓库地址已填好（`https://github.com/MX168/maifan-dazi`），直接复制即可。
 
 --- 正文开始 ---
 
 【参赛申请】
 项目名称：麦饭搭子 · 趣味智能拼单助手
-项目地址：{项目 GitHub 仓库地址}
+项目地址：https://github.com/MX168/maifan-dazi
 项目简介：
 
 麦饭搭子是运行在 WorkBuddy 上的麦当劳拼单技能，通过麦当劳官方 MCP 实时拉取门店菜单、优惠券与营养数据，一次性解决多人拼单里「点什么、花多少、谁付多少、怎么收钱」四个环节。
