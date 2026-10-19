@@ -1,0 +1,42 @@
+{
+  "mode": "fair",
+  "payer": null,
+  "payable_fen": 9890,
+  "members": [
+    {
+      "name": "阿强",
+      "owned_fen": 4300,
+      "pool_share_fen": 0,
+      "pay_fen": 4300,
+      "items": [
+        "麦香鸡套餐",
+        "麦麦脆汁鸡1块"
+      ],
+      "kcal": 369
+    },
+    {
+      "name": "小美",
+      "owned_fen": 2990,
+      "pool_share_fen": 0,
+      "pay_fen": 2990,
+      "items": [
+        "大堡口福三件套",
+        "苹果片"
+      ],
+      "kcal": 32
+    },
+    {
+      "name": "老王",
+      "owned_fen": 2600,
+      "pool_share_fen": 0,
+      "pay_fen": 2600,
+      "items": [
+        "吉士汉堡包套餐"
+      ],
+      "kcal": 0
+    }
+  ],
+  "pool": [],
+  "unmatched_claims": [],
+  "sum_check": true
+}

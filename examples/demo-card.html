@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>麦饭搭子 · 拼单方案效果卡</title>
+<style>
+  :root{
+    --mcd-red:#DA291C;
+    --mcd-yellow:#FFC72C;
+    --ink:#1B1B1B;
+    --ink-2:#5A5A5A;
+    --ink-3:#8A8A8A;
+    --line:#E8E6E1;
+    --bg:#FFFFFF;
+    --bg-soft:#FBF9F5;
+    --green:#0F8A4F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:#F2EFE9;
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Source Han Sans SC",sans-serif;
+    color:var(--ink);
+    padding:32px;
+  }
+  .card{
+    width:920px;
+    margin:0 auto;
+    background:var(--bg);
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 18px 48px rgba(0,0,0,.14);
+  }
+  /* ---------- header ---------- */
+  .hd{
+    background:linear-gradient(135deg,#DA291C 0%,#B81F14 100%);
+    color:#fff;
+    padding:26px 34px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .hd .brand{display:flex;align-items:center;gap:14px;}
+  .hd .logo{
+    width:46px;height:46px;border-radius:12px;
+    background:var(--mcd-yellow);
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;
+  }
+  .hd h1{font-size:25px;font-weight:800;letter-spacing:.5px;}
+  .hd .sub{font-size:13px;opacity:.85;margin-top:3px;}
+  .hd .tag{
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.35);
+    border-radius:999px;padding:7px 16px;font-size:13px;font-weight:600;
+  }
+  .meta{
+    background:var(--mcd-yellow);
+    color:#1B1B1B;
+    padding:11px 34px;
+    font-size:13px;font-weight:600;
+    display:flex;gap:22px;flex-wrap:wrap;
+  }
+  .meta span{opacity:.9;}
+  /* ---------- body ---------- */
+  .bd{padding:28px 34px 30px;}
+  .stats{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px;
+  }
+  .stat{
+    background:var(--bg-soft);border:1px solid var(--line);
+    border-radius:14px;padding:15px 16px;
+  }
+  .stat .k{font-size:12px;color:var(--ink-3);margin-bottom:7px;}
+  .stat .v{font-size:26px;font-weight:800;letter-spacing:-.5px;}
+  .stat .v small{font-size:15px;font-weight:700;}
+  .stat.hl{background:#FFF4E5;border-color:#FFD9A8;}
+  .stat.hl .v{color:var(--mcd-red);}
+  .stat.save .v{color:var(--green);}
+  /* ---------- section ---------- */
+  .sec{margin-bottom:24px;}
+  .sec h2{
+    font-size:15px;font-weight:800;margin-bottom:12px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .sec h2::before{
+    content:"";width:4px;height:15px;border-radius:2px;background:var(--mcd-red);
+  }
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th{
+    text-align:left;font-size:12px;color:var(--ink-3);font-weight:600;
+    padding:0 10px 8px;border-bottom:1px solid var(--line);
+  }
+  td{padding:11px 10px;border-bottom:1px solid #F2F0EC;}
+  tr:last-child td{border-bottom:none;}
+  td.name{font-weight:600;}
+  td.right{text-align:right;}
+  .seat{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:24px;height:24px;border-radius:7px;
+    background:#F0EEE9;color:var(--ink-2);
+    font-size:12px;font-weight:700;margin-right:9px;
+  }
+  .kcal{color:var(--ink-3);font-size:13px;}
+  .na{color:#B9B6B0;}
+  /* ---------- filter ---------- */
+  .filter{
+    background:#FFF6F5;border:1px solid #FAD9D5;border-radius:12px;
+    padding:13px 15px;font-size:13.5px;color:#8C2B22;
+  }
+  .filter b{color:var(--mcd-red);}
+  /* ---------- nutrition ---------- */
+  .nut{display:flex;gap:10px;flex-wrap:wrap;}
+  .nut .chip{
+    background:var(--bg-soft);border:1px solid var(--line);
+    border-radius:10px;padding:8px 14px;font-size:13px;
+  }
+  .nut .chip b{font-size:15px;font-weight:800;margin-right:3px;}
+  /* ---------- fun ---------- */
+  .fun{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .fbox{
+    border:1px solid var(--line);border-radius:14px;padding:15px 16px;
+    background:var(--bg-soft);
+  }
+  .fbox .ftitle{font-size:12px;color:var(--ink-3);margin-bottom:9px;}
+  .fbox .pname{font-size:13px;font-weight:700;}
+  .fbox .ptag{
+    display:inline-block;margin-top:5px;margin-bottom:6px;
+    background:var(--mcd-red);color:#fff;border-radius:6px;
+    padding:3px 9px;font-size:12px;font-weight:700;
+  }
+  .fbox .pdesc{font-size:12px;color:var(--ink-2);line-height:1.6;}
+  .fbox .lucky{font-size:16px;font-weight:800;color:var(--mcd-red);margin-bottom:5px;}
+  .fbox .rank{
+    font-size:17px;font-weight:800;margin-bottom:4px;
+  }
+  .fbox .savebig{font-size:22px;font-weight:800;color:var(--green);}
+  .divider{height:1px;background:var(--line);margin:22px 0;}
+  /* ---------- footer ---------- */
+  .foot{
+    background:#1B1B1B;color:#fff;padding:18px 34px;
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:12.5px;
+  }
+  .foot .promise{display:flex;align-items:center;gap:9px;font-weight:700;}
+  .foot .dot{width:8px;height:8px;border-radius:50%;background:#3DDC84;}
+  .foot .slogan{opacity:.6;}
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="hd">
+    <div class="brand">
+      <div class="logo">🍔</div>
+      <div>
+        <h1>麦饭搭子 · 智能拼单方案</h1>
+        <div class="sub">拼单不吵架，干饭不纠结，麦门精准组队神器</div>
+      </div>
+    </div>
+    <div class="tag">零超支已锁定</div>
+  </div>
+
+  <div class="meta">
+    <span>📍 麦当劳深圳同方信息港餐厅</span>
+    <span>👥 3 人拼单</span>
+    <span>💰 预算 ¥100.00</span>
+    <span>🚫 全员忌口：辣</span>
+    <span>🕒 2026-10-09 实时菜单</span>
+  </div>
+
+  <div class="bd">
+
+    <div class="stats">
+      <div class="stat hl">
+        <div class="k">优惠后实付</div>
+        <div class="v"><small>¥</small>98.90</div>
+      </div>
+      <div class="stat">
+        <div class="k">原价合计</div>
+        <div class="v"><small>¥</small>148.00</div>
+      </div>
+      <div class="stat save">
+        <div class="k">立省</div>
+        <div class="v"><small>¥</small>49.10</div>
+      </div>
+      <div class="stat">
+        <div class="k">人均</div>
+        <div class="v"><small>¥</small>32.96</div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2>每人一个餐位</h2>
+      <table>
+        <tr>
+          <th style="width:56%">餐品</th>
+          <th class="right">单价</th>
+          <th class="right">热量</th>
+        </tr>
+        <tr>
+          <td class="name"><span class="seat">1</span>麦香鸡套餐</td>
+          <td class="right">¥28.00</td>
+          <td class="right"><span class="kcal">369 kcal</span></td>
+        </tr>
+        <tr>
+          <td class="name"><span class="seat">2</span>大堡口福三件套</td>
+          <td class="right">¥22.90</td>
+          <td class="right"><span class="na">—</span></td>
+        </tr>
+        <tr>
+          <td class="name"><span class="seat">3</span>吉士汉堡包套餐</td>
+          <td class="right">¥26.00</td>
+          <td class="right"><span class="na">—</span></td>
+        </tr>
+        <tr>
+          <td class="name"><span class="seat">+</span>麦麦脆汁鸡1块</td>
+          <td class="right">¥15.00</td>
+          <td class="right"><span class="na">—</span></td>
+        </tr>
+        <tr>
+          <td class="name"><span class="seat">+</span>苹果片</td>
+          <td class="right">¥7.00</td>
+          <td class="right"><span class="na">—</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="sec">
+      <h2>忌口已自动过滤</h2>
+      <div class="filter">
+        因 <b>忌口「辣」</b> 已剔除 3 个餐品：麦辣鸡腿汉堡三件套、麦辣鸡腿汉堡、麦辣鸡翅
+      </div>
+    </div>
+
+    <div class="sec">
+      <h2>热量总览</h2>
+      <div class="nut">
+        <div class="chip"><b>401</b>kcal 总热量</div>
+        <div class="chip"><b>17.0</b>g 脂肪</div>
+        <div class="chip"><b>15.0</b>g 蛋白</div>
+        <div class="chip"><b>46.0</b>g 碳水</div>
+        <div class="chip"><b>731</b>mg 钠</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="sec">
+      <h2>趣味彩蛋</h2>
+      <div class="fun">
+        <div class="fbox">
+          <div class="ftitle">🎭 麦门干饭人格</div>
+          <div class="pname">阿强</div>
+          <div class="ptag">炸鸡狂热信徒</div>
+          <div class="pdesc">没有炸物就不算吃饭，麦门炸鸡事业部终身荣誉会员。</div>
+          <div class="pname" style="margin-top:10px">小美</div>
+          <div class="ptag">减脂自律战士</div>
+          <div class="pdesc">热量表比菜单还熟。</div>
+          <div class="pname" style="margin-top:10px">老王</div>
+          <div class="ptag">堡系原教旨主义者</div>
+          <div class="pdesc">坚信世界的本质是两片面包夹一切。</div>
+        </div>
+        <div class="fbox">
+          <div class="ftitle">🔮 今日幸运菜品</div>
+          <div class="lucky">大堡口福三件套</div>
+          <div class="pdesc">寓意：甜度正好，烦恼减半，收工准点。</div>
+          <div class="ftitle" style="margin-top:14px">🏅 省钱段位</div>
+          <div class="rank">麦门省钱战神 🏆</div>
+          <div class="pdesc">这个折扣已经接近极限操作了，请收下膝盖。</div>
+        </div>
+        <div class="fbox">
+          <div class="ftitle">🏅 省钱战绩</div>
+          <div class="savebig">省 ¥49.10</div>
+          <div class="pdesc" style="margin-top:8px">3 人拼单，预算 ¥100.00<br>人均 ¥32.96，结余 ¥1.10</div>
+          <div style="margin-top:14px;background:#fff;border:1px dashed var(--line);border-radius:9px;padding:10px 11px;">
+            <div style="font-size:11px;color:var(--ink-3);margin-bottom:5px;">一键复制下单清单</div>
+            <div style="font-size:11.5px;line-height:1.75;color:var(--ink-2);">
+              麦香鸡套餐 x1<br>
+              大堡口福三件套 x1<br>
+              吉士汉堡包套餐 x1<br>
+              麦麦脆汁鸡1块 x1<br>
+              苹果片 x1
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <div class="promise"><span class="dot"></span>实付 ¥98.90 ≤ 预算 ¥100.00 ｜ 零超支硬约束</div>
+    <div class="slogan">麦饭搭子 · WorkBuddy + 麦当劳官方 MCP</div>
+  </div>
+
+</div>
+</body>
+</html>

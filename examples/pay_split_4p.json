@@ -1,0 +1,97 @@
+{
+  "payable_fen": 11840,
+  "subtotal_fen": 11840,
+  "original_fen": 18000,
+  "coupon_save_fen": 0,
+  "remain_fen": 160,
+  "per_person_fen": 2960,
+  "slot_items": [
+    {
+      "name": "吉士汉堡包套餐",
+      "code": "9900005449",
+      "price_fen": 2600,
+      "category": "套餐",
+      "serves": 1,
+      "nutrition": null
+    },
+    {
+      "name": "大堡口福三件套",
+      "code": "9900015602",
+      "price_fen": 2290,
+      "category": "套餐",
+      "serves": 1,
+      "nutrition": null
+    },
+    {
+      "name": "麦香鸡套餐",
+      "code": "9900005453",
+      "price_fen": 2800,
+      "category": "套餐",
+      "serves": 1,
+      "nutrition": {
+        "energy_kj": 1546.0,
+        "energy_kcal": 369.0,
+        "fat_g": 17.0,
+        "protein_g": 15.0,
+        "carb_g": 39.0,
+        "sodium_mg": 731.0,
+        "calcium_mg": 73.0
+      }
+    },
+    {
+      "name": "麦乐鸡套餐",
+      "code": "9900004835",
+      "price_fen": 2500,
+      "category": "套餐",
+      "serves": 1,
+      "nutrition": null
+    }
+  ],
+  "extra_items": [
+    {
+      "name": "蓝莓爆爆珠麦旋风",
+      "code": "521950",
+      "price_fen": 1650,
+      "qty": 1,
+      "category": "甜品",
+      "serves": 1,
+      "nutrition": null
+    }
+  ],
+  "served": 4,
+  "total_nutrition": {
+    "energy_kj": 1546.0,
+    "energy_kcal": 369.0,
+    "fat_g": 17.0,
+    "protein_g": 15.0,
+    "carb_g": 39.0,
+    "sodium_mg": 731.0,
+    "calcium_mg": 73.0
+  },
+  "report_markdown": "### 💰 预算与花费\n\n| 项目 | 金额 |\n| --- | --- |\n| 总预算 | ¥120.00 |\n| 原价合计 | ¥180.00 |\n| 优惠后实付 | **¥118.40** |\n| 预算结余 | ¥1.60 |\n| 人均 | ¥29.60（4 人） |\n\n### 🍔 每人一个餐位\n\n| 座位 | 餐品 | 单价 | 热量 |\n| --- | --- | --- | --- |\n| 1 | 吉士汉堡包套餐 | ¥26.00 | — |\n| 2 | 大堡口福三件套 | ¥22.90 | — |\n| 3 | 麦香鸡套餐 | ¥28.00 | 369 kcal |\n| 4 | 麦乐鸡套餐 | ¥25.00 | — |\n\n### 🍟 加购小食 / 饮品\n\n| 餐品 | 数量 | 小计 |\n| --- | --- | --- |\n| 蓝莓爆爆珠麦旋风 | 1 | ¥16.50 |\n\n### 🚫 已自动过滤\n\n- **忌口:辣**：麦辣鸡腿汉堡三件套、麦辣鸡腿汉堡、麦辣鸡翅\n- **忌口「洋葱」**：菜单中无匹配餐品，规则已生效\n\n### 🔥 热量总览\n\n- 整套合计：**369 kcal**｜脂肪 17.0 g｜蛋白 15.0 g｜碳水 39.0 g｜钠 731 mg\n- ⚠️ 缺少营养数据：吉士汉堡包套餐、大堡口福三件套、蓝莓爆爆珠麦旋风、麦乐鸡套餐\n\n### 📋 一键复制下单清单\n\n```\n吉士汉堡包套餐  x1\n大堡口福三件套  x1\n麦香鸡套餐  x1\n麦乐鸡套餐  x1\n蓝莓爆爆珠麦旋风  x1\n合计：¥118.40\n```",
+  "ok": true,
+  "feasible": true,
+  "fallback_mode": false,
+  "headcount": 4,
+  "budget_fen": 12000,
+  "score": 78.74,
+  "dropped": [
+    {
+      "name": "麦辣鸡腿汉堡三件套",
+      "reason": "忌口:辣",
+      "price_fen": 3350
+    },
+    {
+      "name": "麦辣鸡腿汉堡",
+      "reason": "忌口:辣",
+      "price_fen": 2250
+    },
+    {
+      "name": "麦辣鸡翅",
+      "reason": "忌口:辣",
+      "price_fen": 1500
+    }
+  ],
+  "dropped_count": 3,
+  "available_count": 56
+}

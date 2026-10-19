@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>麦饭搭子 · 拼单 AA 分账效果卡</title>
+<style>
+  :root{
+    --mcd-red:#DA291C; --mcd-yellow:#FFC72C;
+    --ink:#1B1B1B; --ink-2:#5A5A5A; --ink-3:#8A8A8A;
+    --line:#E8E6E1; --bg:#FFFFFF; --bg-soft:#FBF9F5;
+    --green:#0F8A4F; --blue:#2563EB;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:#F2EFE9; padding:32px;
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Source Han Sans SC",sans-serif;
+    color:var(--ink);
+  }
+  .card{width:920px;margin:0 auto;background:var(--bg);border-radius:20px;
+        overflow:hidden;box-shadow:0 18px 48px rgba(0,0,0,.14);}
+  .hd{background:linear-gradient(135deg,#DA291C 0%,#B81F14 100%);color:#fff;
+      padding:26px 34px;display:flex;align-items:center;justify-content:space-between;}
+  .hd .brand{display:flex;align-items:center;gap:14px;}
+  .logo{width:46px;height:46px;border-radius:12px;background:var(--mcd-yellow);
+        display:flex;align-items:center;justify-content:center;font-size:26px;}
+  .hd h1{font-size:25px;font-weight:800;letter-spacing:.5px;}
+  .hd .sub{font-size:13px;opacity:.85;margin-top:3px;}
+  .hd .tag{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);
+           border-radius:999px;padding:7px 16px;font-size:13px;font-weight:600;}
+  .meta{background:var(--mcd-yellow);color:#1B1B1B;padding:11px 34px;font-size:13px;
+        font-weight:600;display:flex;gap:26px;flex-wrap:wrap;}
+  .bd{padding:26px 34px 30px;}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+  .stat{background:var(--bg-soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+  .stat .k{font-size:12px;color:var(--ink-3);margin-bottom:6px;}
+  .stat .v{font-size:22px;font-weight:800;}
+  .stat .v small{font-size:13px;font-weight:600;color:var(--ink-2);}
+  .sec-t{font-size:14px;font-weight:800;color:var(--ink-2);letter-spacing:.4px;
+         margin:0 0 12px;display:flex;align-items:center;gap:8px;}
+  .members{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:22px;}
+  .m{border:1px solid var(--line);border-radius:16px;padding:16px 18px;background:#fff;
+     display:flex;gap:14px;align-items:flex-start;position:relative;overflow:hidden;}
+  .m .av{width:46px;height:46px;border-radius:14px;background:var(--bg-soft);
+         border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+         font-size:24px;flex:0 0 auto;}
+  .m .info{flex:1;min-width:0;}
+  .m .nm{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px;}
+  .m .tt{font-size:11px;font-weight:700;color:var(--blue);background:#EFF4FF;
+         border-radius:6px;padding:2px 7px;}
+  .m .pay{font-size:27px;font-weight:800;margin-top:6px;letter-spacing:-.5px;}
+  .m .pay em{font-style:normal;font-size:12px;font-weight:700;color:var(--ink-3);margin-left:7px;}
+  .bar{margin-top:9px;height:6px;border-radius:99px;background:#EFEDE8;position:relative;}
+  .bar i{display:block;height:6px;border-radius:99px;background:var(--mcd-red);}
+  .bar .mid{position:absolute;left:50%;top:-3px;width:1px;height:12px;background:#C9C5BD;}
+  .m .desc{font-size:11.5px;color:var(--ink-3);margin-top:8px;line-height:1.5;}
+  .pool{border:1px dashed #D9D4C9;border-radius:14px;background:var(--bg-soft);
+        padding:14px 18px;margin-bottom:22px;font-size:13px;color:var(--ink-2);line-height:1.7;}
+  .pool b{color:var(--ink);}
+  .harmony{display:flex;gap:18px;align-items:center;border:1px solid var(--line);
+           border-radius:16px;padding:16px 20px;background:linear-gradient(90deg,#F7FBF8,#fff);
+           margin-bottom:22px;}
+  .harmony .score{font-size:34px;font-weight:800;color:var(--green);line-height:1;}
+  .harmony .score small{font-size:13px;color:var(--ink-3);font-weight:700;}
+  .harmony .txt{flex:1;}
+  .harmony .txt .t{font-size:15px;font-weight:800;margin-bottom:4px;}
+  .harmony .txt .d{font-size:12.5px;color:var(--ink-2);line-height:1.6;}
+  .copy{background:#1B1B1B;color:#F5F5F5;border-radius:14px;padding:16px 20px;
+        font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+        font-size:13px;line-height:1.85;white-space:pre;}
+  .foot{background:#1B1B1B;color:#C9C5BD;padding:14px 34px;font-size:12px;
+        display:flex;justify-content:space-between;}
+  .foot b{color:#fff;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="hd">
+    <div class="brand">
+      <div class="logo">🧾</div>
+      <div>
+        <h1>拼单 AA 分账</h1>
+        <div class="sub">麦饭搭子 · 按实吃分摊，优惠按比例返还，精确到分</div>
+      </div>
+    </div>
+    <div class="tag">4 人局 · 已算平</div>
+  </div>
+  <div class="meta">
+    <span>🍔 麦当劳深圳同方信息港餐厅</span>
+    <span>👥 4 人</span>
+    <span>🎯 预算 ¥120.00</span>
+    <span>📅 2026-10-09 真实数据</span>
+  </div>
+
+  <div class="bd">
+    <div class="stats">
+      <div class="stat"><div class="k">原价合计</div><div class="v">¥180.00</div></div>
+      <div class="stat"><div class="k">实付</div><div class="v" style="color:var(--mcd-red)">¥118.40</div></div>
+      <div class="stat"><div class="k">人均</div><div class="v">¥29.60</div></div>
+      <div class="stat"><div class="k">极差</div><div class="v">¥5.09 <small>和气 91</small></div></div>
+    </div>
+
+    <div class="sec-t">💸 谁该付多少</div>
+    <div class="members">
+      <div class="m">
+        <div class="av">⚖️</div>
+        <div class="info">
+          <div class="nm">阿哲 <span class="tt">精准 AA 标兵</span></div>
+          <div class="pay">¥30.13 <em>+1.8%</em></div>
+          <div class="bar"><i style="width:50.6%"></i><span class="mid"></span></div>
+          <div class="desc">认领 吉士汉堡包套餐 ¥26.00 ＋ 公共均摊 ¥4.13</div>
+        </div>
+      </div>
+      <div class="m">
+        <div class="av">⚖️</div>
+        <div class="info">
+          <div class="nm">大壮 <span class="tt">精准 AA 标兵</span></div>
+          <div class="pay">¥27.03 <em>-8.7%</em></div>
+          <div class="bar"><i style="width:45.4%"></i><span class="mid"></span></div>
+          <div class="desc">认领 大堡口福三件套 ¥22.90 ＋ 公共均摊 ¥4.13</div>
+        </div>
+      </div>
+      <div class="m">
+        <div class="av">⚖️</div>
+        <div class="info">
+          <div class="nm">婷婷 <span class="tt">精准 AA 标兵</span></div>
+          <div class="pay">¥32.12 <em>+8.5%</em></div>
+          <div class="bar"><i style="width:54.0%"></i><span class="mid"></span></div>
+          <div class="desc">认领 麦香鸡套餐 ¥28.00 ＋ 公共均摊 ¥4.12</div>
+        </div>
+      </div>
+      <div class="m">
+        <div class="av">⚖️</div>
+        <div class="info">
+          <div class="nm">老王 <span class="tt">精准 AA 标兵</span></div>
+          <div class="pay">¥29.12 <em>-1.6%</em></div>
+          <div class="bar"><i style="width:49.0%"></i><span class="mid"></span></div>
+          <div class="desc">认领 麦乐鸡套餐 ¥25.00 ＋ 公共均摊 ¥4.12</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pool">
+      🍟 <b>公共 AA 池</b>：蓝莓爆爆珠麦旋风 ¥16.50（无人认领的默认大家分）<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;每人承担 ¥4.12 ~ ¥4.13 —— 整数除不尽的 1 分由最大余额法派给部分成员，<b>总和分毫不差</b>。
+    </div>
+
+    <div class="harmony">
+      <div class="score">91<small>/100</small></div>
+      <div class="txt">
+        <div class="t">🕊️ 和气生财</div>
+        <div class="d">最高 ¥32.12（婷婷）／最低 ¥27.03（大壮）／标准差 ¥1.83。差距极小，这顿吃完关系只会更好。</div>
+      </div>
+    </div>
+
+    <div class="sec-t">💬 群收款文案（可直接复制）</div>
+    <div class="copy">【麦饭搭子 AA】本次共 ¥118.40，4 人
+阿哲 ¥30.13
+大壮 ¥27.03
+婷婷 ¥32.12
+老王 ¥29.12
+合计 ¥118.40 ✅ 已算平，AA 不吵架
+
+--- 抹零友好版（转整数）---
+阿哲 ¥30.40（收钱方，补齐 ¥0.40）
+大壮 ¥27.00　婷婷 ¥32.00　老王 ¥29.00</div>
+  </div>
+
+  <div class="foot">
+    <span>由 <b>scripts/split.py</b> 生成｜数据源：麦当劳官方 MCP</span>
+    <span>🍔 麦饭搭子 · 拼单不吵架</span>
+  </div>
+</div>
+</body>
+</html>

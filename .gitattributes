@@ -1,0 +1,21 @@
+# 参赛声明必须与大赛官方原版「字节级一致」，禁止 Git 做任何行尾转换。
+# 官方原版为 LF（1522 字节）；若在此被转成 CRLF 会变成 1545 字节，违反「内容不可改动」。
+CONTEST_DECLARATION.md -text
+
+# 其余文本文件统一 LF，保证 Windows / macOS / Linux 三端 clone 结果一致
+*.md   text eol=lf
+*.py   text eol=lf
+*.json text eol=lf
+*.txt  text eol=lf
+*.html text eol=lf
+*.css  text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+
+# 二进制资源，明确声明避免被误判为文本
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.zip binary

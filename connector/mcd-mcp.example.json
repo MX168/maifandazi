@@ -1,0 +1,12 @@
+{
+  "_comment": "麦当劳 MCP 连接器配置示例。⚠️ 请勿把真实的 Authorization 令牌提交到公开仓库 —— 本文件中的令牌已替换为占位符，使用前请替换为你自己的令牌。",
+  "mcpServers": {
+    "mcd-mcp": {
+      "type": "streamablehttp",
+      "url": "https://mcp.mcd.cn",
+      "headers": {
+        "Authorization": "Bearer <YOUR_MCP_TOKEN>"
+      }
+    }
+  }
+}

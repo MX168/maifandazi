@@ -1,0 +1,55 @@
+{
+  "mode": "fair",
+  "payer": null,
+  "payable_fen": 11840,
+  "members": [
+    {
+      "name": "阿哲",
+      "owned_fen": 2600,
+      "pool_share_fen": 413,
+      "pay_fen": 3013,
+      "items": [
+        "吉士汉堡包套餐"
+      ],
+      "kcal": 0
+    },
+    {
+      "name": "大壮",
+      "owned_fen": 2290,
+      "pool_share_fen": 413,
+      "pay_fen": 2703,
+      "items": [
+        "大堡口福三件套"
+      ],
+      "kcal": 0
+    },
+    {
+      "name": "婷婷",
+      "owned_fen": 2800,
+      "pool_share_fen": 412,
+      "pay_fen": 3212,
+      "items": [
+        "麦香鸡套餐"
+      ],
+      "kcal": 369
+    },
+    {
+      "name": "老王",
+      "owned_fen": 2500,
+      "pool_share_fen": 412,
+      "pay_fen": 2912,
+      "items": [
+        "麦乐鸡套餐"
+      ],
+      "kcal": 0
+    }
+  ],
+  "pool": [
+    {
+      "name": "蓝莓爆爆珠麦旋风",
+      "price_fen": 1650
+    }
+  ],
+  "unmatched_claims": [],
+  "sum_check": true
+}

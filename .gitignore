@@ -1,0 +1,24 @@
+# 本地 MCP 配置（含真实令牌，切勿提交）
+mcp.json
+.mcp.json
+*.token
+*.secret
+
+# 本机用户档案
+profile.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 中间产物
+_pipeline_result.json
+_nutrition_parsed.json
+_raw.png
+
+# 分发包（打包脚本会 rglob 整个 skill 目录，
+# 输出目录若放在 skill 内部会把自己也打进去导致体积无限膨胀）
+dist/

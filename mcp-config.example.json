@@ -1,0 +1,12 @@
+{
+  "_comment": "麦当劳 MCP 连接器配置示例（脱敏）。本文件不含任何真实凭证，Authorization 仅为环境变量占位符，使用前请在本地替换为自己的 MCP Token，切勿提交真实令牌。",
+  "mcpServers": {
+    "mcd-mcp": {
+      "type": "streamablehttp",
+      "url": "https://mcp.mcd.cn",
+      "headers": {
+        "Authorization": "Bearer ${MCD_MCP_TOKEN}"
+      }
+    }
+  }
+}
