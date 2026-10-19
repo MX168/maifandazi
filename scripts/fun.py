@@ -3,15 +3,18 @@
 """
 麦饭搭子 · 趣味模块
 
-三个子命令：
+四个子命令：
     personality  麦门干饭人格测试（每人一个标签 + 组队报告）
     lucky        麦门幸运菜品抽签
+    fortune      今日干饭运势（宜 / 忌 / 运势指数，按日期种子，全天全群同一签）
     poster       省钱战绩海报文案
-    all          一次性跑完上面三个（推荐）
+    all          一次性跑完上面四个（推荐）
 
 用法示例：
     python fun.py personality --input persons.json
     python fun.py lucky --items 板烧鸡腿堡,薯条,可乐
+    python fun.py fortune                 # 自动取今天日期做种子
+    python fun.py fortune --seed 20261019 # 指定日期（YYYYMMDD），可复现
     python fun.py poster --input planner_result.json
     python fun.py all --result planner_result.json --persons persons.json
 
@@ -19,8 +22,8 @@ persons.json 结构（可选，缺省按一个匿名干饭人处理）：
     [{"name":"小明","prefer":["炸鸡"],"avoid":["辣"],
       "items":["麦辣鸡翅","可口可乐(中)"]}]
 
-文案库位于本文件顶部的 TAG_RULES / LUCKY_BLESSINGS / RANK_TIERS，
-需要扩展或改玩梗风格时直接改这些常量即可。
+文案库位于本文件顶部的 TAG_RULES / LUCKY_BLESSINGS / RANK_TIERS /
+FORTUNE_YI / FORTUNE_JI / FORTUNE_HINTS，需要扩展或改玩梗风格时直接改常量。
 """
 
 from __future__ import annotations
@@ -91,6 +94,87 @@ RANK_TIERS = [
     (0.02, "稳健派 👍", "优惠拿捏住了，稳。"),
     (0.00, "原始人 🍔", "没占到便宜也没关系，吃饱就是正义。"),
 ]
+
+
+# ---------------------------------------------------------------- 今日运势
+
+# 运势由「日期整数」做随机种子：同一天里全群抽到同一签，
+# 可以在群里对暗号（「今天宜加购薯条，冲不冲？」），次日自动换签。
+
+FORTUNE_YI = [
+    "宜加购大薯条，分享装是社交货币",
+    "宜点套餐，今天组合拳格外划算",
+    "宜尝试新品，麦门会奖励勇敢的人",
+    "宜请同事喝圆筒，人情投资回报率极高",
+    "宜中午就去，避开打饭高峰的被动技能今天生效",
+    "宜把甜筒捏在手里慢慢吃，时间会对你温柔一点",
+    "宜多拉一个人拼单，AA 之后人均感人",
+    "宜用券，今天的手气适合薅优惠",
+    "宜吃双层，厚度就是态度",
+    "宜喝无糖可乐，快乐不打折",
+]
+
+FORTUNE_JI = [
+    "忌点辣，今天的胃有点小脾气",
+    "忌贪杯快乐水，气泡会让你下午犯困",
+    "忌临时加人，账会变难算（除非你有麦饭搭子）",
+    "忌不吃早餐硬撑到中午，容易点超支",
+    "忌深夜刷麦当劳 App，意志力今晚不在线",
+    "忌跟风点你不爱吃的，流行不能替你消化",
+    "忌让「随便」成为答案，随便最容易踩雷",
+    "忌忘了核对备注，钱要转得明明白白",
+]
+
+# 运势指数分档：(下限, 评级, 一句话)
+FORTUNE_TIERS = [
+    (85, "麦门光环加身 ✨", "今天诸事皆宜，下单吧，麦门保佑你。"),
+    (70, "运势上扬 📈", "顺风局，适合把想吃很久的那单安排上。"),
+    (50, "平稳开局 🍟", "中规中矩，跟着预算走就不会错。"),
+    (30, "小有波澜 🌦️", "点单前多看一眼忌口，别让小情绪坏事。"),
+    (0,  "谨慎进食 🐟", "今天适合保守操作：点吃过的，别冒险。"),
+]
+
+FORTUNE_HINTS = [
+    "幸运数字 %d，点单时可以凑个份数。",
+    "幸运时段：%s，这一单建议卡着点下单。",
+    "今日贵人：第一个说「我也吃」的同事。",
+]
+
+
+def render_fortune(seed=None) -> str:
+    """按日期种子生成今日干饭运势；不传 seed 时取今天（YYYYMMDD）。"""
+    if seed is None:
+        import datetime
+        seed = int(datetime.date.today().strftime("%Y%m%d"))
+    rng = random.Random(seed)
+
+    yi = rng.sample(FORTUNE_YI, k=2)
+    ji = rng.sample(FORTUNE_JI, k=2)
+    idx = rng.randint(1, 100)
+    tier, comment = FORTUNE_TIERS[-1][1], FORTUNE_TIERS[-1][2]
+    for floor, t, c in FORTUNE_TIERS:
+        if idx >= floor:
+            tier, comment = t, c
+            break
+    lucky_num = rng.randint(1, 9)
+    slot = rng.choice(["11:00-11:30", "11:30-12:00", "17:00-17:30", "17:30-18:00"])
+
+    lines = ["### 🧧 今日干饭运势", "",
+             "干饭运势指数：**%d / 100** —— %s" % (idx, tier), "",
+             "> %s" % comment, "",
+             "**宜**",
+             " - %s" % yi[0],
+             " - %s" % yi[1],
+             "",
+             "**忌**",
+             " - %s" % ji[0],
+             " - %s" % ji[1],
+             "",
+             " - %s" % FORTUNE_HINTS[0] % lucky_num,
+             " - %s" % (FORTUNE_HINTS[1] % slot),
+             "",
+             "> 同一天全群同一签（按日期生成），欢迎拿去群里对暗号。"]
+    return "\n".join(lines)
 
 
 # ---------------------------------------------------------------- 人格引擎
@@ -224,6 +308,9 @@ def main():
     p3.add_argument("--input", help="planner 结果 JSON 路径")
     p3.add_argument("--json", help="内联 JSON 字符串")
 
+    p35 = sub.add_parser("fortune", help="今日干饭运势（按日期种子，全群同一签）")
+    p35.add_argument("--seed", type=int, help="日期整数 YYYYMMDD，不传则取今天")
+
     p4 = sub.add_parser("all", help="一次性生成全部趣味内容")
     p4.add_argument("--result", required=True, help="planner.py 的结果 JSON")
     p4.add_argument("--persons", help="persons.json 路径")
@@ -252,6 +339,8 @@ def main():
         print(render_lucky(names, args.seed))
     elif args.cmd == "poster":
         print(render_poster(load_json(args.input, args.json)))
+    elif args.cmd == "fortune":
+        print(render_fortune(args.seed))
     elif args.cmd == "all":
         with open(args.result, "r", encoding="utf-8") as f:
             res = json.load(f)
@@ -270,6 +359,8 @@ def main():
         print(render_personality(persons))
         print()
         print(render_lucky(names, args.seed))
+        print()
+        print(render_fortune())
         print()
         print(render_poster(res))
     return 0

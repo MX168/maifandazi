@@ -110,8 +110,25 @@
 
 - **🎭 麦门干饭人格测试** —— 生成每人标签（炸鸡狂热信徒 / 减脂自律战士 / 堡系原教旨主义者 / 甜品治愈选手…）+ 组队鉴定报告
 - **🔮 麦门幸运菜品抽签** —— 随机幸运菜品 + 吉祥文案
+- **🧧 今日干饭运势** —— 宜 / 忌 / 运势指数 / 幸运数字与时段，**按日期做种子：同一天全群抽到同一签**，可以拿去群里对暗号（「今天宜加购大薯条，冲不冲？」），次日自动换签
 - **🏅 省钱战绩海报** —— 立省金额、段位评定，可直接分享
 - **🚫 避雷黑名单** —— 永久拉黑某菜品，本地持久化，后续搭配自动过滤
+
+### 🏅 麦门段位与成就徽章（长期养成线）
+
+彩蛋是「这一次」的快乐，段位是「每一次」的积累。`scripts/rank.py` 把拼单行为
+沉淀成一套可成长的设定，数据落在本地 `~/.maifan-dazi/rank.json`：
+
+| 设定 | 内容 |
+| --- | --- |
+| **六档段位** | 🎒 麦门萌新 → 🍟 麦门学徒 → 🍔 麦门老饕 → 🏅 麦门达人 → 👑 麦门宗师 → 🐉 麦门至尊，每档附一句话人设 |
+| **战绩点** | 拼单次数 ×10 + 累计省下(元) ×1 + 零超支次数 ×5，只涨不掉 |
+| **十枚徽章** | 零超支守卫 / AA 标兵 / 省钱战神 / 避雷大师 / 连击王 / 甜品终结者 / 社交达人 / 减脂卫士 / 麦门常客 / 预算魔术师，附进度条 |
+| **档案卡** | 一张 Markdown 卡：段位进度、累计数据、已解锁徽章与待解锁进度，每次结算自动输出 |
+
+值得注意的是徽章判定和硬性承诺是**打通的**：「零超支守卫」看的就是实付 ≤ 预算，
+「AA 标兵」看的就是 `sum(各人应付) == 实付` 的 `sum_check` —— 工程约束变成了可收集的成就。
+另有一条诚实性规则：**营养数据不完整时不判「减脂卫士」**，宁可不发徽章也不拿残缺数据充数。
 
 ---
 
@@ -299,6 +316,59 @@ python scripts/paylink.py gen \
     --out examples/pay_output.md
 ```
 
+### 🧧 第四个演示：段位结算与今日运势
+
+把上面那局再跑一遍，这次带上 `--rank`（结算段位）：
+
+```bash
+python scripts/pipeline.py \
+    --request examples/demo_request_4p.json \
+    --nutrition-raw examples/nutrition_raw_2026-10-09.txt \
+    --persons examples/demo_persons_4p.json \
+    --seed 20261009 --rank
+```
+
+末尾会多出两块内容。**麦门档案卡**（段位、战绩点、徽章进度）：
+
+```markdown
+### 🏅 麦门档案
+
+**🍟 麦门学徒**　知道薯条要趁热，但还会在柜台前犹豫
+
+段位进度 ▓▓▓▓▓▓▓▓▓▓▓░　76 / 80 → 下一档 **麦门老饕**（还差 4 点）
+
+| 累计拼单 | 累计省下 | 零超支 | 连续天数 | 战绩点 |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 次 | ¥61.60 | 1 次 | 1 天 | **76** |
+
+**徽章 3 / 10**
+
+⚖️ AA 标兵 💰 省钱战神 🎲 预算魔术师
+
+🎉 本次新解锁：⚖️ AA 标兵、💰 省钱战神、🎲 预算魔术师
+```
+
+**今日干饭运势**（按日期种子，同一天全群同一签）：
+
+```markdown
+### 🧧 今日干饭运势
+
+干饭运势指数：**61 / 100** —— 平稳开局 🍟
+
+> 中规中矩，跟着预算走就不会错。
+
+**宜**
+ - 宜喝无糖可乐，快乐不打折
+ - 宜把甜筒捏在手里慢慢吃，时间会对你温柔一点
+
+**忌**
+ - 忌贪杯快乐水，气泡会让你下午犯困
+ - 忌忘了核对备注，钱要转得明明白白
+
+ - 幸运数字 9，点单时可以凑个份数。
+ - 幸运时段：17:00-17:30，这一单建议卡着点下单。
+```
+
 ---
 
 ## 四、项目结构
@@ -318,11 +388,12 @@ maifan-dazi/
 │   ├── split.py                    # 拼单 AA 分账引擎（差异化核心）
 │   ├── paylink.py                  # 付款凭证生成器（备注 + CRC32 校验 + 出码）
 │   ├── miniqr.py                   # 零依赖二维码编码器（ISO/IEC 18004）
+│   ├── rank.py                     # 麦门段位与成就徽章（长期养成线）
 │   ├── parse_nutrition.py          # 营养接口原始数据解析
-│   ├── fun.py                      # 人格 / 幸运菜品 / 战绩海报
+│   ├── fun.py                      # 人格 / 幸运菜品 / 干饭运势 / 战绩海报
 │   ├── profile.py                  # 避雷清单与口味档案（本地持久化）
 │   ├── pipeline.py                 # 端到端编排（一条命令跑完）
-│   └── selftest.py                 # 边界用例自测（70 项）
+│   └── selftest.py                 # 边界用例自测（94 项）
 ├── references/
 │   ├── mcp-api.md                  # MCP 参数对照与踩坑清单
 │   └── dietary-rules.md            # 忌口与偏好关键词词表
@@ -419,13 +490,36 @@ python scripts/miniqr.py --text "麦门永存" --utf8      # 终端字符画，�
 python scripts/miniqr.py --selftest                    # 校验内部版本/纠错表
 ```
 
-### 跑一遍自测（70 项边界用例）
+### 麦门段位与成就
+
+```bash
+python scripts/rank.py show                  # 看当前段位与徽章
+python scripts/rank.py show --md             # 输出 Markdown 档案卡
+python scripts/rank.py record --result examples/pay_split_4p.json \
+    --split examples/pay_split_4p_out.json    # 记录一次拼单并结算解锁
+python scripts/rank.py reset
+
+# 也可以在端到端跑完时顺手结算（会写入 ~/.maifan-dazi/rank.json）
+python scripts/pipeline.py --request examples/demo_request_4p.json \
+    --nutrition-raw examples/nutrition_raw_2026-10-09.txt \
+    --persons examples/demo_persons_4p.json --seed 20261009 --rank
+```
+
+### 单独看今日运势
+
+```bash
+python scripts/fun.py fortune                 # 取今天
+python scripts/fun.py fortune --seed 20261019 # 指定日期，可复现
+```
+
+### 跑一遍自测（94 项边界用例）
 
 ```bash
 python scripts/selftest.py                # 全部
 python scripts/selftest.py --only split   # 只跑分账
 python scripts/selftest.py --only paylink # 只跑付款凭证
 python scripts/selftest.py --only qr      # 只跑二维码
+python scripts/selftest.py --only rank    # 只跑段位与成就
 ```
 
 ### 作为 WorkBuddy Skill 使用（推荐）
@@ -567,6 +661,8 @@ def checksum(prefix: str) -> str:
 | **手写了二维码编码器** | 零依赖实现 ISO/IEC 18004（GF(256) RS 纠错 + 掩码惩罚评分），并用第三方解码器 jsQR 跨语言验证 30/30 + 真实 PNG 4/4 |
 | **转账备注可机检** | CRC32 校验位让「少报金额」当场暴露，`verify` 子命令以退出码 3 判伪，不依赖肉眼核对 |
 | **不伪造支付能力** | 微信/支付宝均未开放第三方签发，本项目明确声明「不是支付指令」，只做信息凭证 |
+| **工程约束变成可收集成就** | 「零超支守卫」看实付 ≤ 预算，「AA 标兵」看 `sum_check`，硬承诺直接做成徽章 |
+| **趣味也是不编造的** | 营养数据不完整时不判「减脂卫士」；运势按日期种子可复现，而不是每次瞎随机 |
 | **轻量可落地** | 纯标准库、无数据库、无需部署，Skill 形式直接可用 |
 
 ---
@@ -608,6 +704,8 @@ def checksum(prefix: str) -> str:
 - [x] 三个趣味彩蛋
 - [x] 拼单 AA 分账（按实吃 / 平摊 / 请客 + 公共池 + 抹零版）
 - [x] 一人一码付款凭证（零依赖二维码 + CRC32 校验备注，jsQR 验证 30/30 + 4/4）
+- [x] 麦门段位与成就徽章（六档段位 + 十枚徽章 + 档案卡）
+- [x] 今日干饭运势（按日期种子，全群同一签）
 - [ ] 麦门人格海报的图片化输出
 - [ ] 常用组合一键复用（基于 `profile.py` 的历史记录）
 - [ ] 多人份餐品份额的自动识别（当前依赖调用方传 `serves`）

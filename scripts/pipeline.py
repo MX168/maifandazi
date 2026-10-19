@@ -69,6 +69,9 @@ def main():
     ap.add_argument("--payer", help="请客模式下的买单者姓名")
     ap.add_argument("--round-yuan", action="store_true",
                     help="AA 分账额外输出抹零到整元的版本")
+    ap.add_argument("--rank", action="store_true",
+                    help="结算麦门段位与成就徽章，末尾附「麦门档案卡」"
+                         "（会写入 ~/.maifan-dazi/rank.json）")
     args = ap.parse_args()
 
     for f in [args.request, args.nutrition_raw, args.persons]:
@@ -132,15 +135,30 @@ def main():
         split_cmd += ["--round-yuan"]
     split_md = run(split_cmd)
 
+    # ---- 5.5 麦门段位与成就（可选）
+    rank_md = ""
+    split_json = None
+    if args.rank:
+        step("结算麦门段位 ...", args.quiet)
+        split_json = os.path.join(HERE, "_pipeline_split.json")
+        run(split_cmd + ["--json", "--out", split_json])
+        rank_cmd = [os.path.join(HERE, "rank.py"), "record",
+                    "--result", tmp_result, "--md"]
+        if os.path.exists(split_json):
+            rank_cmd += ["--split", split_json]
+        rank_md = run(rank_cmd)
+
     # ---- 6. 组装最终输出
     step("组装最终输出 ...", args.quiet)
     parts = [result["report_markdown"], "", "---", "", fun_md, "",
-             "---", "", split_md, "",
-             "> 由 `scripts/pipeline.py` 端到端生成｜数据源：麦当劳官方 MCP"]
+             "---", "", split_md, ""]
+    if rank_md:
+        parts += ["---", "", rank_md, ""]
+    parts += ["> 由 `scripts/pipeline.py` 端到端生成｜数据源：麦当劳官方 MCP"]
     final = "\n".join(parts)
 
     # 清理中间文件
-    for f in [tmp_result, nutrition_json]:
+    for f in [tmp_result, nutrition_json, split_json]:
         if f and os.path.exists(f):
             try:
                 os.remove(f)

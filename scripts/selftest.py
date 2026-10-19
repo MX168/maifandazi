@@ -511,10 +511,173 @@ def t_split_edges():
         print("  ⏭️  跳过 CLI 冒烟（缺演示数据）")
 
 
+def t_fortune_edges():
+    """今日干饭运势的边界用例。"""
+    print("\n── 干饭运势边界用例 ──")
+    fn = load_any_module("fun")
+
+    # 1. 同一日期种子两次抽取结果一致（可复现）
+    a = fn.render_fortune(20261019)
+    b = fn.render_fortune(20261019)
+    check("同日期运势可复现", a == b)
+
+    # 2. 不同日期通常不同（连续整数日期，仅当撞签才算失败）
+    c = fn.render_fortune(20261020)
+    diff_days = sum(1 for s in (20261001, 20261002, 20261003, 20261004, 20261005)
+                    if fn.render_fortune(s) != fn.render_fortune(s + 1))
+    check("相邻日期运势不同", diff_days >= 4, "%d/5" % diff_days)
+
+    # 3. 运势指数落在 1~100
+    import re as _re
+    m = _re.search(r"指数：\*\*(\d+) / 100\*\*", a)
+    check("运势指数在 1~100", m is not None and 1 <= int(m.group(1)) <= 100,
+          m.group(1) if m else "未找到")
+
+    # 4. 宜忌各两条且不重复
+    yi = [l for l in a.splitlines() if l.startswith(" - 宜")]
+    ji = [l for l in a.splitlines() if l.startswith(" - 忌")]
+    check("宜忌各 2 条且不重复", len(yi) == 2 and len(ji) == 2
+          and len(set(yi)) == 2 and len(set(ji)) == 2)
+
+    # 5. 文案库非空且不互相重叠（宜与忌不能自相矛盾）
+    overlap = set(fn.FORTUNE_YI) & set(fn.FORTUNE_JI)
+    check("宜忌文案库无重叠", not overlap and len(fn.FORTUNE_YI) >= 4 and len(fn.FORTUNE_JI) >= 4)
+
+
+def t_rank_edges():
+    """麦门段位与成就系统的边界用例。"""
+    print("\n── 段位与成就边界用例 ──")
+    rk = load_any_module("rank")
+    import tempfile
+
+    tmp = tempfile.mkdtemp(prefix="mfd-rank-")
+    rank_file = os.path.join(tmp, "rank.json")
+    os.environ["MAIFAN_RANK"] = rank_file
+    # 隔离避雷清单读取，避免测试被真实本机档案影响
+    os.environ["MAIFAN_PROFILE"] = os.path.join(tmp, "no-such-profile.json")
+
+    base = lambda **kw: dict(rk.EMPTY_STATS, **kw)
+
+    # 1. 段位表本身自洽：阈值严格递增
+    ths = [r[0] for r in rk.RANKS]
+    check("段位阈值严格递增", all(ths[i] < ths[i + 1] for i in range(len(ths) - 1)), str(ths))
+
+    # 2. 空档案一定是萌新
+    s = base()
+    cur, nxt, need = rk.rank_of(rk.points(s))
+    check("空档案为麦门萌新", cur[1] == "麦门萌新" and nxt is not None, cur[1])
+
+    # 3. 满级时下一段为 None
+    s = base(orders=999, save_fen=999999, no_over=999)
+    cur, nxt, need = rk.rank_of(rk.points(s))
+    check("满级后无下一段", nxt is None and cur[1] == "麦门至尊", cur[1])
+
+    # 4. 战绩点公式：次数×10 + 省下(元)×1 + 零超支×5
+    s = base(orders=3, save_fen=2550, no_over=2)
+    check("战绩点公式正确", rk.points(s) == 3 * 10 + 25 + 2 * 5,
+          "%d != %d" % (rk.points(s), 3 * 10 + 25 + 2 * 5))
+
+    # 5. 徽章 id 不重复（否则解锁会互相覆盖）
+    ids = [b["id"] for b in rk.BADGES]
+    check("徽章 id 唯一", len(ids) == len(set(ids)), str(ids))
+
+    def mkresult(payable, budget, **kw):
+        r = {"ok": True, "headcount": kw.get("headcount", 3),
+             "budget_fen": budget, "payable_fen": payable,
+             "coupon_save_fen": kw.get("save_fen", 0),
+             "original_fen": kw.get("original_fen", 0),
+             "slot_items": kw.get("slot_items", [{"name": "A", "category": "套餐",
+                                                  "price_fen": 1000, "nutrition": None}]),
+             "extra_items": kw.get("extra_items", []),
+             "total_nutrition": kw.get("total_nutrition", {"energy_kcal": 500.0})}
+        return r
+
+    # 6. 未成功的方案不记录（ok=False）
+    s = base()
+    rk.absorb(s, {"ok": False})
+    check("未成功方案不记战绩", s["orders"] == 0, str(s["orders"]))
+
+    # 7. 超支时不算零超支
+    s = base()
+    rk.absorb(s, mkresult(payable=12000, budget=10000))
+    check("超支不计零超支", s["orders"] == 1 and s["no_over"] == 0,
+          "orders=%d no_over=%d" % (s["orders"], s["no_over"]))
+
+    # 8. 预算内才算零超支
+    s = base()
+    rk.absorb(s, mkresult(payable=8000, budget=10000))
+    check("预算内计零超支", s["no_over"] == 1, str(s["no_over"]))
+
+    # 9. 贴预算判定：花到 95% 以上且没超才算「预算魔术师」
+    s = base()
+    rk.absorb(s, mkresult(payable=5000, budget=10000))   # 只花 50%
+    check("花一半不算贴预算", s["tight"] == 0, str(s["tight"]))
+    s = base()
+    rk.absorb(s, mkresult(payable=9600, budget=10000))   # 花 96%
+    check("花 96% 算贴预算", s["tight"] == 1, str(s["tight"]))
+
+    # 10. 诚实性：营养数据不完整时不得判定「减脂卫士」
+    s = base()
+    rk.absorb(s, mkresult(payable=8000, budget=10000,
+                          slot_items=[{"name": "A", "category": "套餐",
+                                       "price_fen": 1000, "nutrition": None}],
+                          total_nutrition={"energy_kcal": 120.0}))
+    check("营养残缺不发减脂徽章", s["min_kcal"] is None, str(s["min_kcal"]))
+
+    # 11. 营养齐全时才记热量
+    s = base()
+    rk.absorb(s, mkresult(payable=8000, budget=10000,
+                          slot_items=[{"name": "A", "category": "套餐",
+                                       "price_fen": 1000, "nutrition": {"energy_kcal": 300}}],
+                          total_nutrition={"energy_kcal": 300.0}))
+    check("营养齐全才记热量", s["min_kcal"] == 300, str(s["min_kcal"]))
+
+    # 12. 徽章不会重复解锁
+    s = base()
+    rk.absorb(s, mkresult(payable=8000, budget=10000), {"sum_check": True})
+    first = list(s["badges"])
+    rk.absorb(s, mkresult(payable=8000, budget=10000), {"sum_check": True})
+    check("徽章不重复解锁", s["badges"] == first, "%s -> %s" % (first, s["badges"]))
+
+    # 13. 连击逻辑：同一天不重复累加
+    s = base()
+    rk.absorb(s, mkresult(payable=8000, budget=10000))
+    d1, st1 = s["last_day"], s["streak"]
+    rk.absorb(s, mkresult(payable=8000, budget=10000))
+    check("同日重复拼单不叠加连击", s["streak"] == st1 and s["last_day"] == d1,
+          "%s/%s" % (s["streak"], st1))
+
+    # 14. 连击断天重置为 1
+    s = base(streak=5, last_day="2000-01-01")
+    rk.absorb(s, mkresult(payable=8000, budget=10000))
+    check("断天连击重置为 1", s["streak"] == 1, str(s["streak"]))
+
+    # 15. 进度条边界：分母为 0 不崩
+    check("进度条零分母安全", rk.progress_bar(0, 0) == "▓" * 12, rk.progress_bar(0, 0))
+
+    # 16. 两种渲染都不崩且含关键字段
+    md = rk.render_md(base(orders=1, badges=["exact_split"]))
+    txt = rk.render_text(base(orders=1, badges=["exact_split"]))
+    check("Markdown 档案卡含段位与徽章", "麦门档案" in md and "AA 标兵" in md)
+    check("纯文本档案卡含段位", "麦门" in txt and "战绩点" in txt)
+
+    # 17. 落盘与回读一致
+    s = base(orders=4, save_fen=1234, no_over=2, badges=["zero_over"])
+    rk.save(s)
+    back = rk.load()
+    check("战绩落盘回读一致",
+          back["orders"] == 4 and back["save_fen"] == 1234 and back["badges"] == ["zero_over"],
+          str(back.get("badges")))
+
+    os.environ.pop("MAIFAN_RANK", None)
+    os.environ.pop("MAIFAN_PROFILE", None)
+    shutil.rmtree(tmp, ignore_errors=True)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", choices=["planner", "fun", "parse", "profile",
-                                       "split", "paylink", "qr"])
+                                       "split", "paylink", "qr", "rank", "fortune"])
     args = ap.parse_args()
 
     print("=" * 62)
@@ -533,6 +696,10 @@ def main():
         t_split_edges()
     if not args.only or args.only in ("paylink", "qr"):
         t_paylink_edges()
+    if not args.only or args.only == "rank":
+        t_rank_edges()
+    if not args.only or args.only in ("fun", "fortune"):
+        t_fortune_edges()
 
     print("\n" + "=" * 62)
     print("通过 %d ｜ 失败 %d" % (len(PASS), len(FAIL)))
