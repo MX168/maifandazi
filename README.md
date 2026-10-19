@@ -123,8 +123,8 @@
 
 ![麦饭搭子效果卡](./examples/demo-card.png)
 
-> 上图由 `examples/demo-card.html` 渲染生成，数据源为 `examples/demo_result.json` 与
-> `examples/demo_fun_output.md`，**非设计稿或示意图**。
+> 上图数据源为 `examples/demo_result.json` 与 `examples/demo_fun_output.md`，
+> **非设计稿或示意图**。
 
 用户看到的最终输出：
 
@@ -212,7 +212,7 @@ python ../scripts/fun.py all --result demo_result.json --persons demo_persons.js
 
 ![拼单 AA 分账效果卡](./examples/aa-card.png)
 
-> 上图由 `examples/aa-card.html` 渲染，数据来自 `examples/final_output_4p.md`（`scripts/pipeline.py` 端到端产出）。
+> 上图数据来自 `examples/final_output_4p.md`（`scripts/pipeline.py` 端到端产出）。
 
 四个人的实吃金额其实并不一样——婷婷 ¥28.00、老王 ¥25.00、阿哲 ¥26.00、大壮 ¥22.90。
 如果只报「人均 ¥29.60」，婷婷白吃、大壮吃亏。分账引擎给出的是：
@@ -248,7 +248,7 @@ python scripts/pipeline.py \
 
 ![一人一码付款凭证](./examples/pay-card.png)
 
-> 上图由 `examples/pay-card.html` 渲染，图片素材为 `examples/pay/pay_01~04.png`
+> 上图的付款码素材为 `examples/pay/pay_01~04.png`
 > （`scripts/paylink.py` 的真实产出，非设计稿）。
 
 | 序号 | 成员 | 应付 | 转账备注 |
@@ -307,14 +307,12 @@ python scripts/paylink.py gen \
 maifan-dazi/
 ├── SKILL.md                        # Skill 主文档（WorkBuddy 加载入口）
 ├── README.md                       # 本文件
-├── SUBMISSION_ISSUE.md             # 报名 Issue 文案（可直接复制提交）
 ├── MCP_INTEGRATION.md              # MCP 接口对接详细说明（官方指定文件名）
 ├── CONTEST_DECLARATION.md          # 大赛官方原版声明（内容未改动）
 ├── mcp-config.example.json         # 脱敏 MCP 配置示例（仅环境变量占位符）
 ├── workbuddy.md                    # 运行环境说明与功能适配证明
-├── PROJECT_DECLARATION.md          # 项目自主声明（补充说明，非官方要求）
-├── LICENSE                         # MIT 开源许可
 ├── .gitignore                      # 防止令牌等敏感文件被提交
+├── .gitattributes                  # 锁定官方声明行尾（防 Windows CRLF 转换）
 ├── scripts/
 │   ├── planner.py                  # 预算锁死搭配算法（核心）
 │   ├── split.py                    # 拼单 AA 分账引擎（差异化核心）
@@ -349,9 +347,9 @@ maifan-dazi/
     ├── pay_split_4p_out.json       # 分账结果（4 人）
     ├── pay_output.md               # 付款凭证 Markdown（含字符画二维码）
     ├── pay/pay_01~04.png           # 4 张真实付款码（已通过 jsQR 解码验证）
-    ├── demo-card.html / .png       # 效果卡（拼单方案）
-    ├── aa-card.html / .png         # 效果卡（AA 分账）
-    └── pay-card.html / .png        # 效果卡（一人一码付款凭证）
+    ├── demo-card.png               # 效果卡（拼单方案）
+    ├── aa-card.png                 # 效果卡（AA 分账）
+    └── pay-card.png                # 效果卡（一人一码付款凭证）
 ```
 
 ---
@@ -630,11 +628,8 @@ def checksum(prefix: str) -> str:
 | `mcp-config.example.json` | 脱敏后的 MCP 配置示例，只允许环境变量占位符 | 必须 | ✅ 已完成 |
 | `workbuddy.md` | WorkBuddy 对话上下文（参与专项奖励时必须） | 非必须；参与 WorkBuddy 专项奖励时必须 | ✅ 已完成 |
 | 源代码 | 项目主体代码或可运行内容 | 必须，形式不限 | ✅ 已完成 |
-| `LICENSE` | 开源许可（MIT），非官方要求 | — | ✅ 已完成 |
-| `PROJECT_DECLARATION.md` | 项目自主声明（补充说明），非官方要求 | — | ✅ 已完成 |
-| `SUBMISSION_ISSUE.md` | 报名 Issue 文案（1000 字内、无图），非官方要求 | — | ✅ 已完成 |
 
-> 说明：代码采用 MIT 许可。麦当劳相关商标、品牌名称、餐品名称的权利归其权利人所有，
+> 说明：麦当劳相关商标、品牌名称、餐品名称的权利归其权利人所有，
 > 本项目仅作技术实现展示，不主张任何商标权益。
 
 ## 十二、报名与评审须知（官方规则要点）
@@ -652,15 +647,12 @@ def checksum(prefix: str) -> str:
   项目简介：……
   ```
 
-  完整简介文案见 [SUBMISSION_ISSUE.md](./SUBMISSION_ISSUE.md)，已控制在 1000 字内、不含图片，可直接复制。
-
 - **仓库必须 Public**，否则无法通过报名审核
 
 ## 十三、相关文档
 
 - [MCP_INTEGRATION.md](./MCP_INTEGRATION.md) —— MCP 接口对接流程与技术原理
 - [CONTEST_DECLARATION.md](./CONTEST_DECLARATION.md) —— 大赛官方原版参赛声明
-- [PROJECT_DECLARATION.md](./PROJECT_DECLARATION.md) —— 项目自主声明与提交前检查清单
 - [workbuddy.md](./workbuddy.md) —— 运行环境说明与功能适配证明
 - [connector/README.md](./connector/README.md) —— 连接器接入与安全提醒
 - [references/mcp-api.md](./references/mcp-api.md) —— 参数对照表与踩坑清单

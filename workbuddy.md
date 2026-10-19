@@ -45,7 +45,7 @@ subprocess  sys  tempfile  time  pathlib  collections.Counter
 
 | 工具 | 用途 | 是否必需 |
 | --- | --- | --- |
-| Chromium 系浏览器（Edge / Chrome） | 把 `examples/*-card.html` 截图成 PNG | 否 |
+| Chromium 系浏览器（Edge / Chrome） | 重新制作效果卡图片（现有 PNG 已随仓库提供） | 否 |
 | Pillow | 截掉截图留白 | 否 |
 | Node.js + `jsQR` | **仅用于开发期验证**二维码能被第三方解码器扫出 | 否（产出与运行均不需要） |
 
@@ -63,9 +63,7 @@ maifan-dazi/
 ├── MCP_INTEGRATION.md          # MCP 接口对接说明（官方指定文件名）
 ├── CONTEST_DECLARATION.md      # 大赛官方原版声明（内容未改动）
 ├── mcp-config.example.json     # 脱敏 MCP 配置示例（仅环境变量占位符）
-├── PROJECT_DECLARATION.md      # 项目自主声明（补充说明）
 ├── workbuddy.md                # 本文件
-├── LICENSE                     # MIT 开源许可
 ├── scripts/                    # 逻辑脚本（全部零第三方依赖）
 │   ├── planner.py              # 预算锁死搭配算法
 │   ├── split.py                # 拼单 AA 分账引擎
