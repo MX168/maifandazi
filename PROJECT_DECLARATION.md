@@ -16,7 +16,7 @@
 | 参赛赛道 | 麦当劳程序员创意开发大赛（M-CODE） |
 | 开发平台 | WorkBuddy |
 | 数据来源 | 麦当劳官方 MCP Server |
-| 项目仓库 | https://github.com/MX168/maifan-dazi |
+| 项目仓库 | https://github.com/MX168/maifandazi |
 | 参赛者 | 白偃言 |
 | 联系方式 | （填写邮箱） |
 | 声明日期 | 2026-10-19 |
