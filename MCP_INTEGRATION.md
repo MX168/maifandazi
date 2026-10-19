@@ -299,3 +299,37 @@ python scripts/parse_nutrition.py --input nutrition_raw.txt --out nutrition.json
 | `query-my-account` | ⭕ 预留 |
 | `query-lottery-info` / `draw-lottery` | ⭕ 预留（严禁自动抽） |
 | `campaign-calendar` | ⭕ 预留 |
+
+---
+
+## 十三、接入配置与凭证安全
+
+### 13.1 两种接入方式
+
+**方式 A：通过 WorkBuddy 连接器面板启用（推荐）**
+
+打开 WorkBuddy → 左下角「连接器」管理入口 → 搜索「麦当劳」并启用 → 按提示完成授权。
+启用后 WorkBuddy 会自动写入本地配置，**无需手动编辑 JSON**。
+
+**方式 B：手动写入配置**
+
+配置文件位于 `~/.workbuddy/mcp.json`（**注意不是** `~/.workbuddy/.mcp.json`）。
+把仓库根目录 [`mcp-config.example.json`](./mcp-config.example.json) 中的 `mcpServers`
+条目**合并**进已有的 `mcpServers` 对象，不要覆盖其他 server。
+
+### 13.2 凭证安全（重要）
+
+**不要把真实的 `Authorization` 令牌提交到公开仓库。**
+
+本项目参赛需提交 GitHub 公开仓库，因此：
+
+- 仓库中只保留 `mcp-config.example.json`，令牌位置为环境变量占位符 `${MCD_MCP_TOKEN}`
+- 真实令牌只存在于本机 `~/.workbuddy/mcp.json`，该文件**不应**被提交
+- 建议在项目根目录的 `.gitignore` 中加入 `mcp.json` 与 `*.token`
+- 若不慎提交过令牌，请立即在麦当劳开放平台吊销并重新签发
+
+### 13.3 验证是否接入成功
+
+启用后在对话中让助手列出可用工具，应能看到 `mcp__mcd-mcp__` 前缀的工具
+（`query-meals`、`query-store-coupons`、`list-nutrition-foods`、`calculate-price` 等）。
+看不到即为未接入。此时本项目**不会**编造菜单与价格，而是提示用户先完成接入。

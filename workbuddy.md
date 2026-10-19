@@ -45,7 +45,7 @@ subprocess  sys  tempfile  time  pathlib  collections.Counter
 
 | 工具 | 用途 | 是否必需 |
 | --- | --- | --- |
-| Chromium 系浏览器（Edge / Chrome） | 重新制作效果卡图片（现有 PNG 已随仓库提供） | 否 |
+| Chromium 系浏览器（Edge / Chrome） | 可选：把 Markdown 输出渲染成图片 | 否 |
 | Pillow | 截掉截图留白 | 否 |
 | Node.js + `jsQR` | **仅用于开发期验证**二维码能被第三方解码器扫出 | 否（产出与运行均不需要） |
 
@@ -75,8 +75,7 @@ maifan-dazi/
 │   ├── pipeline.py             # 端到端编排
 │   ├── rank.py                 # 麦门段位与成就徽章
 │   └── selftest.py             # 94 项边界用例自测
-├── references/                 # 参考文档
-├── connector/                  # 连接器配置示例
+├── references/                 # 参考文档（MCP 参数对照 / 忌口词表）
 └── examples/                   # 演示与测试样例（含 4 张真实付款码）
 ```
 
@@ -90,7 +89,10 @@ maifan-dazi/
 
 1. 启用麦当劳 MCP 连接器
    - 方式 A：WorkBuddy → 左下角「连接器」入口 → 搜索「麦当劳」→ 启用
-   - 方式 B：手动配置，见 [`connector/README.md`](./connector/README.md)
+   - 方式 B：手动写入 `~/.workbuddy/mcp.json`，
+     条目见仓库根目录 [`mcp-config.example.json`](./mcp-config.example.json)
+     （令牌为环境变量占位符，接入与安全提醒详见
+     [`MCP_INTEGRATION.md`](./MCP_INTEGRATION.md) 第十三节）
 2. 安装 Skill —— 任选其一：
    - 把 `maifan-dazi/` 整个目录复制到 `~/.workbuddy/skills/`
    - 或导入随包分发的 Skill 包 `maifan-dazi-skill-*.zip`

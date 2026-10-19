@@ -138,10 +138,8 @@
 **门店**：麦当劳深圳同方信息港餐厅（storeCode `1420762`，到店自提）
 **数据时间**：2026-10-09
 
-![麦饭搭子效果卡](./examples/demo-card.png)
-
-> 上图数据源为 `examples/demo_result.json` 与 `examples/demo_fun_output.md`，
-> **非设计稿或示意图**。
+> 本节数据源自 `examples/demo_result.json` 与 `examples/demo_fun_output.md`，
+> **为脚本真实输出，非设计稿或示意图**。
 
 用户看到的最终输出：
 
@@ -227,9 +225,7 @@ python ../scripts/fun.py all --result demo_result.json --persons demo_persons.js
 
 同样是 2026-10-09 的真实门店数据，4 人、预算 ¥120、点了一份加购甜品打算大家分。
 
-![拼单 AA 分账效果卡](./examples/aa-card.png)
-
-> 上图数据来自 `examples/final_output_4p.md`（`scripts/pipeline.py` 端到端产出）。
+> 本节数据来自 `examples/final_output_4p.md`（`scripts/pipeline.py` 端到端产出）。
 
 四个人的实吃金额其实并不一样——婷婷 ¥28.00、老王 ¥25.00、阿哲 ¥26.00、大壮 ¥22.90。
 如果只报「人均 ¥29.60」，婷婷白吃、大壮吃亏。分账引擎给出的是：
@@ -263,10 +259,8 @@ python scripts/pipeline.py \
 
 把上面那局 4 人的分账结果直接编码成付款码：
 
-![一人一码付款凭证](./examples/pay-card.png)
-
-> 上图的付款码素材为 `examples/pay/pay_01~04.png`
-> （`scripts/paylink.py` 的真实产出，非设计稿）。
+> 下表 4 张付款码的素材见 `examples/pay/pay_01~04.png`
+> （`scripts/paylink.py` 的真实产出，已通过 jsQR 跨语言解码验证，非设计稿）。
 
 | 序号 | 成员 | 应付 | 转账备注 |
 | --- | --- | --- | --- |
@@ -397,9 +391,6 @@ maifan-dazi/
 ├── references/
 │   ├── mcp-api.md                  # MCP 参数对照与踩坑清单
 │   └── dietary-rules.md            # 忌口与偏好关键词词表
-├── connector/
-│   ├── mcd-mcp.example.json        # 连接器配置示例（令牌为占位符）
-│   └── README.md                   # 接入方式与安全提醒
 └── examples/
     ├── nutrition_raw_2026-10-09.txt# 官方营养接口原始返回
     ├── nutrition.json              # 解析后的营养数据
@@ -417,10 +408,7 @@ maifan-dazi/
     ├── pay_split_4p.json           # 分账请求（4 人）
     ├── pay_split_4p_out.json       # 分账结果（4 人）
     ├── pay_output.md               # 付款凭证 Markdown（含字符画二维码）
-    ├── pay/pay_01~04.png           # 4 张真实付款码（已通过 jsQR 解码验证）
-    ├── demo-card.png               # 效果卡（拼单方案）
-    ├── aa-card.png                 # 效果卡（AA 分账）
-    └── pay-card.png                # 效果卡（一人一码付款凭证）
+    └── pay/pay_01~04.png           # 4 张真实付款码（已通过 jsQR 解码验证）
 ```
 
 ---
@@ -752,7 +740,6 @@ def checksum(prefix: str) -> str:
 - [MCP_INTEGRATION.md](./MCP_INTEGRATION.md) —— MCP 接口对接流程与技术原理
 - [CONTEST_DECLARATION.md](./CONTEST_DECLARATION.md) —— 大赛官方原版参赛声明
 - [workbuddy.md](./workbuddy.md) —— 运行环境说明与功能适配证明
-- [connector/README.md](./connector/README.md) —— 连接器接入与安全提醒
 - [references/mcp-api.md](./references/mcp-api.md) —— 参数对照表与踩坑清单
 - [references/dietary-rules.md](./references/dietary-rules.md) —— 忌口与偏好关键词词表
 - [SKILL.md](./SKILL.md) —— Skill 主文档
